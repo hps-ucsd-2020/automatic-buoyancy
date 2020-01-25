@@ -1,0 +1,72 @@
+#include whatever we need
+
+#define WATER_DENSITY
+#define AIR_DENSITY
+#define INITIAL_SP_VAL
+
+#define WATER_IN_PIN
+#define WATER_OUT_PIN
+
+static float buoyancy_setpoint = INITIAL_SP_VAL
+
+setup() {
+	init_stream(); // for prints
+	init_logging(); // SD log saving
+	init_sensors();
+	init_controller(); // buoyancy controller
+	
+	get_startingData(); // for anything we might need immediately
+}
+/*
+	SYSTEM OVERVIEW
+	
+	4 valve system - 2 sets, open and close for water and air
+	one sensor detecing air in/out
+	set of water sensors to detect height of water
+*/
+
+/**
+ * Goals:	go up when up button is pressed
+ *			go down when down button is pressed
+ */
+loop() {
+	button_pressed_handler() // handle button inputs
+}
+
+button_pressed_handler() {
+	if(up_button_pressed){
+		close water in valve
+		open water out valve
+		close air out valve
+		open air in valve
+	}else(down_button_pressed){
+		open water in valve
+		close water out valve
+		open air out valve
+		close air in valve
+	}else{
+		close all valves
+	}
+}
+
+// code below is for more complex algorithm that may not be entirely necessary
+
+/**
+ * Goals: 	detect the density of the pipe
+ * 			use the density of the pipe for buoyancy calculations
+ *			change buoyancy to match goal buoyancy
+ * Tools:	PID to alter the buoyancy
+ *			System to detect water levels and air level
+ */
+loop() {
+	// acquire data from our sensors
+	float water_height = get_water_height();
+	float airspeed = get_airspeed();
+	
+	// use data from sensors
+	getUserInput(); // update buoyancy_setpoint
+	float density = calculate_density(water_height, airspeed); // grab where we are
+	
+	// run PID
+	float error = buoyancy_setpoint - density; // how far do we need to move?
+}
